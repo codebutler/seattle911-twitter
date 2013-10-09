@@ -1,0 +1,4 @@
+*.state
+*.log
+*.lock
+config.yml
