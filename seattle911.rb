@@ -101,20 +101,19 @@ class Seattle911Tweeter
           incidents.each do |incident|
             # For now we only list incidents as they become active.
             if incident[:status] == 'active' && incident[:num].to_i > self.last_num
-              # Feed is PST or PDT depending on time of year.
-              date = Time.parse("#{incident[:date]} #{Time.now.zone}")
+              date = Time.strptime("#{incident[:date]}", '%m/%d/%Y %I:%M:%S %p')
               date = TZInfo::Timezone.get('America/Los_Angeles').local_to_utc(date)
               # Skip anything more than 10 minutes old.
               if date >= 10.minutes.ago.utc
     	          cleaned_location = incident[:location].gsub(/\//, ' and ') + ', Seattle WA'
 
           	    options = {}
-          	    geo = Google::Geo.new(@config[:gmaps][:key])
-          	    results = geo.locate(cleaned_location)
-          	    if results.length > 0
-          	      options[:lat] = results.first.lat
-          	      options[:long] = results.first.lng
-          	    end
+          	    #geo = Google::Geo.new(@config[:gmaps][:key])
+          	    #results = geo.locate(cleaned_location)
+          	    #if results.length > 0
+          	    #  options[:lat] = results.first.lat
+          	    #  options[:long] = results.first.lng
+          	    #end
 
                 msg = "#{incident[:type]} @ #{incident[:location]} (#{incident[:units]})"
                 q = "#{cleaned_location} (#{incident[:date]} - #{incident[:type]} - Units: #{incident[:units]} - Incident: ##{incident[:num]})"
